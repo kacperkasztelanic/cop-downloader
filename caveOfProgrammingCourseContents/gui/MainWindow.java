@@ -79,11 +79,12 @@ public class MainWindow extends JFrame
 	private int advance;
 	private SimpleDateFormat sdf;
 	private MyPopupMenu popup;
+	private MyPopupMenuText popupText;
 	private Component space;
 
 	public MainWindow()
 	{
-		super("CaveOfProgramming Contents Downloader v1.3");
+		super("CaveOfProgramming Contents Downloader v1.4");
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setResizable(false);
@@ -254,6 +255,7 @@ public class MainWindow extends JFrame
 
 		// Popup menu
 		popup = new MyPopupMenu(this);
+		popupText = new MyPopupMenuText(this);
 		this.addMouseListener(new MouseAdapter()
 		{
 			public void mouseClicked(MouseEvent e)
@@ -279,6 +281,11 @@ public class MainWindow extends JFrame
 				}
 			}
 		});
+		urlTF.setComponentPopupMenu(popupText);
+		fromTF.setComponentPopupMenu(popupText);
+		upToTF.setComponentPopupMenu(popupText);
+		pathTF.setComponentPopupMenu(popupText);
+		fileNamePatternTF.setComponentPopupMenu(popupText);
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);

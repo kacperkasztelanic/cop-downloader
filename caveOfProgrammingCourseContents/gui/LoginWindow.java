@@ -38,6 +38,7 @@ public class LoginWindow extends JDialog
 	private JLabel usernameLb;
 	private JLabel passwordLb;
 	private MainWindow mw;
+	private MyPopupMenuText popupText;
 
 	public LoginWindow(Frame parent)
 	{
@@ -161,6 +162,10 @@ public class LoginWindow extends JDialog
 					passwordPF.setEchoChar('*');
 			}
 		});
+
+		popupText = new MyPopupMenuText(mw);
+		usernameTF.setComponentPopupMenu(popupText);
+		passwordPF.setComponentPopupMenu(popupText);
 
 		JPanel southPanel = new JPanel(new FlowLayout());
 		southPanel.setBorder(new EmptyBorder(0, 0, 5, 0));
