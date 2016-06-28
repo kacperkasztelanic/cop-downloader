@@ -48,6 +48,7 @@ public class MainWindow extends JFrame
 	private JButton browseBt;
 	private JButton tableOfContentsBt;
 	private JCheckBox attachmentsCheck;
+	private JCheckBox attachmentsOnlyCheck;
 	private JProgressBar progressBar;
 	private JTextArea progressAreaRaw;
 	private JScrollPane progressArea;
@@ -82,7 +83,7 @@ public class MainWindow extends JFrame
 
 	public MainWindow()
 	{
-		super("CaveOfProgramming Contents Downloader v1.1");
+		super("CaveOfProgramming Contents Downloader v1.2");
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setResizable(false);
@@ -112,7 +113,10 @@ public class MainWindow extends JFrame
 		progressBar = new JProgressBar();
 		// CheckBoxes init
 		attachmentsCheck = new JCheckBox("Download attachments");
-		attachmentsCheck.setToolTipText("<html>Set this if you want to download attached <i>*.zip</i> files.</html>");
+		attachmentsCheck.setToolTipText("<html>Set this if you want to download attached files.</html>");
+		attachmentsOnlyCheck = new JCheckBox("Attachments only");
+		attachmentsOnlyCheck.setToolTipText("<html>Set this if you want to download only attached files.</html>");
+		attachmentsOnlyCheck.setEnabled(false);
 		// TextArea and ScrollPane init
 		progressAreaRaw = new JTextArea();
 		progressArea = new JScrollPane(progressAreaRaw);
@@ -182,6 +186,19 @@ public class MainWindow extends JFrame
 				tableOfContentsDo();
 			}
 		});
+		attachmentsCheck.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				if (attachmentsOnlyCheck.isEnabled())
+				{
+					attachmentsOnlyCheck.setEnabled(false);
+					attachmentsOnlyCheck.setSelected(false);
+				}
+				else
+					attachmentsOnlyCheck.setEnabled(true);
+			}
+		});
 
 		mainPl = new JPanel();
 
@@ -204,6 +221,7 @@ public class MainWindow extends JFrame
 		downloadPl.add(upToLb);
 		downloadPl.add(upToTF);
 		downloadPl.add(attachmentsCheck);
+		downloadPl.add(attachmentsOnlyCheck);
 		mainPl.add(downloadPl);
 
 		buttonsPl = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -360,6 +378,7 @@ public class MainWindow extends JFrame
 			stopBt.setEnabled(true);
 			progressLb.setText("Download in progress: ");
 			dc.setAttachmentsDownload(attachmentsCheck.isSelected());
+			dc.setAttachmentsOnlyDownload(attachmentsOnlyCheck.isSelected());
 			dc.setFolderPath(pathTF.getText());
 			dc.setPrefix(fileNamePatternTF.getText());
 			dc.setUrlToWebsite(urlTF.getText());

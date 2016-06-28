@@ -29,6 +29,7 @@ public class DownloadContents
 	private int fileNumber;
 	private int code;
 	private boolean attachmentsDownload;
+	private boolean attachmentsOnlyDownload;
 	private Pattern codePattern = Pattern.compile("[0-9]+$");
 
 	public DownloadContents()
@@ -83,21 +84,26 @@ public class DownloadContents
 	private void downloadContents() throws IOException
 	{
 		int size = this.urls.size();
-		String vidurl = null;
+		String fullUrl = null;
 		String ext = null;
 		URL urlv = null;
 		URL urla = null;
 		if (size > 0)
 		{
-			vidurl = this.urls.get(0);
-			ext = vidurl.substring(vidurl.length() - 3);
-			urlv = new URL(this.urls.get(0));
-			File vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
-			FileUtils.copyURLToFile(urlv, vid);
+			if (!attachmentsOnlyDownload)
+			{
+				fullUrl = this.urls.get(0);
+				ext = fullUrl.substring(fullUrl.length() - 3);
+				urlv = new URL(this.urls.get(0));
+				File vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
+				FileUtils.copyURLToFile(urlv, vid);
+			}
 			if (size > 1 && this.attachmentsDownload)
 			{
+				fullUrl = this.urls.get(1);
+				ext = fullUrl.substring(fullUrl.length() - 3);
 				urla = new URL(this.urls.get(1));
-				File att = new File(String.format("%s\\%s%d.zip", this.folderPath, this.prefix, this.fileNumber));
+				File att = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
 				FileUtils.copyURLToFile(urla, att);
 			}
 		}
@@ -168,6 +174,16 @@ public class DownloadContents
 	public boolean getAttachemntsDownload()
 	{
 		return this.attachmentsDownload;
+	}
+
+	public void setAttachmentsOnlyDownload(boolean bool)
+	{
+		this.attachmentsOnlyDownload = bool;
+	}
+
+	public boolean getAttachemntsOnlyDownload()
+	{
+		return this.attachmentsOnlyDownload;
 	}
 
 	public void setFileNumber(int number)
