@@ -48,19 +48,16 @@ public class MainWindow extends JFrame
 	private JButton browseBt;
 	private JButton tableOfContentsBt;
 	private JCheckBox attachmentsCheck;
-	private JCheckBox manualCheck;
 	private JProgressBar progressBar;
 	private JTextArea progressAreaRaw;
 	private JScrollPane progressArea;
 	private JTextField urlTF;
-	private JTextField codeTF;
 	private JTextField fromTF;
 	private JTextField upToTF;
 	private JTextField pathTF;
 	private JTextField fileNamePatternTF;
 	private JFileChooser folderDialog;
 	private JLabel urlLb;
-	private JLabel codeLb;
 	private JLabel downloadLb;
 	private JLabel upToLb;
 	private JLabel progressLb;
@@ -85,7 +82,7 @@ public class MainWindow extends JFrame
 
 	public MainWindow()
 	{
-		super("CaveOfProgramming Contents Downloader v1.0");
+		super("CaveOfProgramming Contents Downloader v1.1");
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setResizable(false);
@@ -105,7 +102,7 @@ public class MainWindow extends JFrame
 		stopBt = new JButton("Stop");
 		stopBt.setEnabled(false);
 		stopBt.setToolTipText(stopTip);
-		String browseTip = "Use convenient creator to select desired path for files.";
+		String browseTip = "Use convenient dialog to select desired path for files.";
 		browseBt = new JButton("Browse");
 		browseBt.setToolTipText(browseTip);
 		String tableOfContentsTip = "<html>Creates a simple text table of contents for the course.<br />File will be named: <i>tableOfContents.txt</i> and placed in the same folder specified in <code>Save folder</code> field.</html>";
@@ -116,9 +113,6 @@ public class MainWindow extends JFrame
 		// CheckBoxes init
 		attachmentsCheck = new JCheckBox("Download attachments");
 		attachmentsCheck.setToolTipText("<html>Set this if you want to download attached <i>*.zip</i> files.</html>");
-		manualCheck = new JCheckBox("Manual control");
-		manualCheck.setToolTipText(
-				"<html>If unchecked you need only to pass the number of the first movie. <br /> The next ones will be calculated automatically.</html>");
 		// TextArea and ScrollPane init
 		progressAreaRaw = new JTextArea();
 		progressArea = new JScrollPane(progressAreaRaw);
@@ -127,11 +121,8 @@ public class MainWindow extends JFrame
 		progressArea.setVisible(false);
 		// TextFields init
 		String urlTip = "<html>Pass here generic url to the course - without <i>/lectures/xxxxx</i> sequence, where <i>xxxxx</i> is the number you need to provide to the <code>Start from</code> field.<br />Example: <i>http://courses.caveofprogramming.com/courses/the-java-spring-tutorial</i> for the Spring Tutorial.</html>";
-		urlTF = new JTextField(50);
+		urlTF = new JTextField(65);
 		urlTF.setToolTipText(urlTip);
-		String codeTip = "<html>Pass here the number at the end of the first movie url.<br />If <code>Manual Control</code> is turned on you need to provide here the number of the first movie you want to download.</html>";
-		codeTF = new JTextField(6);
-		codeTF.setToolTipText(codeTip);
 		String fromTip = "Number of the first movie you want to download.";
 		fromTF = new JTextField(3);
 		fromTF.setToolTipText(fromTip);
@@ -152,8 +143,6 @@ public class MainWindow extends JFrame
 		pathLb.setToolTipText(pathTip);
 		urlLb = new JLabel("URL: ");
 		urlLb.setToolTipText(urlTip);
-		codeLb = new JLabel("Start from: ");
-		codeLb.setToolTipText(codeTip);
 		downloadLb = new JLabel("Download from: ");
 		downloadLb.setToolTipText(fromTip);
 		upToLb = new JLabel(" to: ");
@@ -162,7 +151,6 @@ public class MainWindow extends JFrame
 		fileNamePatternLb = new JLabel("File name: ");
 		fileNamePatternLb.setToolTipText(fileNamePatternTip);
 
-		advance = 0;
 		sdf = new SimpleDateFormat("HH':'mm':'ss");
 
 		// Buttons action listeners
@@ -200,8 +188,6 @@ public class MainWindow extends JFrame
 		urlPl = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		urlPl.add(urlLb);
 		urlPl.add(urlTF);
-		urlPl.add(codeLb);
-		urlPl.add(codeTF);
 		mainPl.add(urlPl);
 
 		pathPl = new JPanel(new FlowLayout(FlowLayout.LEFT));
@@ -218,7 +204,6 @@ public class MainWindow extends JFrame
 		downloadPl.add(upToLb);
 		downloadPl.add(upToTF);
 		downloadPl.add(attachmentsCheck);
-		downloadPl.add(manualCheck);
 		mainPl.add(downloadPl);
 
 		buttonsPl = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -345,12 +330,6 @@ public class MainWindow extends JFrame
 		pathTF.setText(pathTF.getText().trim());
 		if (!(pathTF.getText().length() > 0))
 			return false;
-		codeTF.setText(codeTF.getText().trim());
-		if (!(codeTF.getText().length() > 0))
-			return false;
-		for (int i = 0; i < codeTF.getText().length(); i++)
-			if (codeTF.getText().charAt(i) < 48 || codeTF.getText().charAt(i) > 57)
-				return false;
 		if (all)
 		{
 			fromTF.setText(fromTF.getText().trim());
@@ -388,11 +367,8 @@ public class MainWindow extends JFrame
 			int upTo = Integer.parseInt(upToTF.getText());
 			progressBar.setMaximum(upTo - from + 1);
 			progressBar.setValue(0);
+			advance = 0;
 			dc.setFileNumber(from);
-			if (manualCheck.isSelected())
-				dc.setCode(Integer.parseInt(codeTF.getText()));
-			else
-				dc.setCode(Integer.parseInt(codeTF.getText()) + Integer.parseInt(fromTF.getText()) - 1);
 			SwingWorker<Void, Integer> worker = new SwingWorker<Void, Integer>()
 			{
 				boolean problem = false;
@@ -401,6 +377,8 @@ public class MainWindow extends JFrame
 				{
 					try
 					{
+						for (int i = 1; i < from; i++)
+							dc.omitLesson();
 						while (dc.getFileNumber() <= upTo && !stop && !problem)
 						{
 							publish(dc.getFileNumber());
@@ -430,9 +408,12 @@ public class MainWindow extends JFrame
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
+					{
 						JOptionPane.showMessageDialog(null,
 								"<html>There was a problem downloading contents.<br />Ensure data you input is correct.</html>",
 								"Error", JOptionPane.ERROR_MESSAGE);
+						appendTextArea("Problem downloading contents.");
+					}
 				}
 
 				protected void process(List<Integer> number)
@@ -481,7 +462,6 @@ public class MainWindow extends JFrame
 		if (ok)
 		{
 			String url = urlTF.getText();
-			String code = codeTF.getText();
 			String fileNamePattern = fileNamePatternTF.getText();
 			String path = pathTF.getText();
 			SwingWorker<Void, Void> worker = new SwingWorker<Void, Void>()
@@ -492,7 +472,7 @@ public class MainWindow extends JFrame
 				{
 					try
 					{
-						TableOfContents.createTableOfContents(url + "/lectures/" + code, path, fileNamePattern);
+						TableOfContents.createTableOfContents(url, path, fileNamePattern);
 					}
 
 					catch (IOException e)

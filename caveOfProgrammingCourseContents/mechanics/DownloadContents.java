@@ -6,6 +6,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.jsoup.Connection.Method;
@@ -20,26 +22,18 @@ public class DownloadContents
 	private Map<String, String> cookies;
 	private List<String> urls;
 	private Document doc;
-	private String urlToWebsite;
+	private String urlToWebsiteFull;
+	private String urlToWebsiteRoot;
 	private String prefix;
 	private String folderPath;
 	private int fileNumber;
 	private int code;
 	private boolean attachmentsDownload;
+	private Pattern codePattern = Pattern.compile("[0-9]+$");
 
 	public DownloadContents()
 	{
 
-	}
-
-	public DownloadContents(String urlToWebsite, int code, String prefix, String folderPath, int fileNumber,
-			boolean attachmentsDownload)
-	{
-		this.prefix = prefix;
-		this.code = code;
-		this.folderPath = folderPath;
-		this.fileNumber = fileNumber;
-		this.attachmentsDownload = attachmentsDownload;
 	}
 
 	public void downloadNextPieceOfContents() throws IOException
@@ -48,15 +42,21 @@ public class DownloadContents
 		this.getLinks();
 		this.downloadContents();
 		this.fileNumber++;
-		this.code++;
+		this.code = getNextLessonCode();
 	}
 
-	public void retrieveDocument() throws IOException
+	public void omitLesson() throws IOException
 	{
-		this.doc = Jsoup.connect(this.urlToWebsite + "/lectures/" + this.code).cookies(cookies).get();
+		this.retrieveDocument();
+		this.code = getNextLessonCode();
 	}
 
-	public void getLinks()
+	private void retrieveDocument() throws IOException
+	{
+		this.doc = Jsoup.connect(this.urlToWebsiteRoot + "/lectures/" + this.code).cookies(cookies).get();
+	}
+
+	private void getLinks()
 	{
 		String vlink = "";
 		String alink = "";
@@ -80,7 +80,7 @@ public class DownloadContents
 		this.urls = urls;
 	}
 
-	public void downloadContents() throws IOException
+	private void downloadContents() throws IOException
 	{
 		int size = this.urls.size();
 		String vidurl = null;
@@ -132,6 +132,34 @@ public class DownloadContents
 		return false;
 	}
 
+	private int getNextLessonCode()
+	{
+		Elements el = this.doc.select("a#lecture_complete_button");
+		int next = -1;
+		if (el.size() > 0)
+		{
+			String href = el.get(0).attr("href");
+			Matcher m = this.codePattern.matcher(href);
+			if (m.find())
+				next = Integer.parseInt(m.group());
+		}
+		return next;
+	}
+
+	private int retrieveLessonCodeFromUrl(String url)
+	{
+		int code = -1;
+		Matcher m = this.codePattern.matcher(url);
+		if (m.find())
+			code = Integer.parseInt(m.group());
+		return code;
+	}
+
+	private String retrieveUrlRoot()
+	{
+		return urlToWebsiteFull.substring(0, urlToWebsiteFull.indexOf("lectures") - 1);
+	}
+
 	public void setAttachmentsDownload(boolean bool)
 	{
 		this.attachmentsDownload = bool;
@@ -174,12 +202,14 @@ public class DownloadContents
 
 	public void setUrlToWebsite(String urlToWebsite)
 	{
-		this.urlToWebsite = urlToWebsite;
+		this.urlToWebsiteFull = urlToWebsite;
+		this.urlToWebsiteRoot = retrieveUrlRoot();
+		this.code = retrieveLessonCodeFromUrl(urlToWebsite);
 	}
 
 	public String getUrlToWebsite()
 	{
-		return urlToWebsite;
+		return urlToWebsiteFull;
 	}
 
 	public void setCode(int code)
@@ -194,9 +224,9 @@ public class DownloadContents
 
 	public String toString()
 	{
-		return "DownloadContents [urlToWebsite=" + urlToWebsite + ", prefix=" + prefix + ", folderPath=" + folderPath
-				+ ", fileNumber=" + fileNumber + ", code=" + code + ", attachmentsDownload=" + attachmentsDownload
-				+ "]";
+		return "DownloadContents [urlToWebsite=" + urlToWebsiteFull + ", prefix=" + prefix + ", folderPath="
+				+ folderPath + ", fileNumber=" + fileNumber + ", code=" + code + ", attachmentsDownload="
+				+ attachmentsDownload + "]";
 	}
 
 	// public static void main(String[] args) throws IOException
