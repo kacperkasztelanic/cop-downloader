@@ -93,7 +93,7 @@ public class DownloadContents
 			if (!attachmentsOnlyDownload)
 			{
 				fullUrl = this.urls.get(0);
-				ext = fullUrl.substring(fullUrl.length() - 3);
+				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
 				urlv = new URL(this.urls.get(0));
 				File vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
 				FileUtils.copyURLToFile(urlv, vid);
@@ -101,7 +101,7 @@ public class DownloadContents
 			if (size > 1 && this.attachmentsDownload)
 			{
 				fullUrl = this.urls.get(1);
-				ext = fullUrl.substring(fullUrl.length() - 3);
+				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
 				urla = new URL(this.urls.get(1));
 				File att = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
 				FileUtils.copyURLToFile(urla, att);

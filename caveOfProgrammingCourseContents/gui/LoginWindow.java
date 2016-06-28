@@ -118,7 +118,7 @@ public class LoginWindow extends JDialog
 										JOptionPane.INFORMATION_MESSAGE);
 								dispose();
 							}
-							else
+							else if (error == false)
 							{
 								mw.statusBar.hideLogged();
 								mw.setDownloadBtAccessible(false);
