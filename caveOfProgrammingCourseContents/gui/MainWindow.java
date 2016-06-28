@@ -102,7 +102,7 @@ public class MainWindow extends JFrame
 		stopBt = new JButton("Stop");
 		stopBt.setEnabled(false);
 		stopBt.setToolTipText(stopTip);
-		String browseTip = "Use convenient dialog to select desired path for files.";
+		String browseTip = "Use a convenient dialog to select desired path for files.";
 		browseBt = new JButton("Browse");
 		browseBt.setToolTipText(browseTip);
 		String tableOfContentsTip = "<html>Creates a simple text table of contents for the course.<br />File will be named: <i>tableOfContents.txt</i> and placed in the same folder specified in <code>Save folder</code> field.</html>";
@@ -120,7 +120,7 @@ public class MainWindow extends JFrame
 		progressAreaRaw.setFont(progressArea.getFont().deriveFont(12f));
 		progressArea.setVisible(false);
 		// TextFields init
-		String urlTip = "<html>Pass here generic url to the course - without <i>/lectures/xxxxx</i> sequence, where <i>xxxxx</i> is the number you need to provide to the <code>Start from</code> field.<br />Example: <i>http://courses.caveofprogramming.com/courses/the-java-spring-tutorial</i> for the Spring Tutorial.</html>";
+		String urlTip = "<html>Pass here an url to the first lesson of the course.<br />Example: <i>http://courses.caveofprogramming.com/courses/the-java-spring-tutorial/lectures/38020</i> for the Spring Tutorial.</html>";
 		urlTF = new JTextField(65);
 		urlTF.setToolTipText(urlTip);
 		String fromTip = "Number of the first movie you want to download.";
