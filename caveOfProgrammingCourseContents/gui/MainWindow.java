@@ -83,7 +83,7 @@ public class MainWindow extends JFrame
 
 	public MainWindow()
 	{
-		super("CaveOfProgramming Contents Downloader v1.2");
+		super("CaveOfProgramming Contents Downloader v1.3");
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setResizable(false);

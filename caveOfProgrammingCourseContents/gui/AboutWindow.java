@@ -29,7 +29,7 @@ public class AboutWindow extends JPanel
 		author.setAlignmentX(Component.CENTER_ALIGNMENT);
 		year = new JLabel("Created in 2016");
 		year.setAlignmentX(Component.CENTER_ALIGNMENT);
-		version = new JLabel("Version: 1.2");
+		version = new JLabel("Version: 1.3");
 		version.setAlignmentX(Component.CENTER_ALIGNMENT);
 		title = new JLabel("CaveOfProgramming Contents Downloader");
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -1,6 +1,8 @@
 package caveOfProgrammingCourseContents.mechanics;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,7 +11,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
 import org.jsoup.Connection.Method;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -96,7 +97,7 @@ public class DownloadContents
 				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
 				urlv = new URL(this.urls.get(0));
 				File vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
-				FileUtils.copyURLToFile(urlv, vid);
+				saveFromUrlToFile(urlv, vid);
 			}
 			if (size > 1 && this.attachmentsDownload)
 			{
@@ -104,7 +105,23 @@ public class DownloadContents
 				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
 				urla = new URL(this.urls.get(1));
 				File att = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
-				FileUtils.copyURLToFile(urla, att);
+				saveFromUrlToFile(urla, att);
+			}
+		}
+	}
+
+	private void saveFromUrlToFile(URL url, File file) throws IOException
+	{
+		try (BufferedInputStream bis = new BufferedInputStream(url.openConnection().getInputStream()))
+		{
+			try (FileOutputStream fis = new FileOutputStream(file))
+			{
+				byte[] buffer = new byte[1024];
+				int count = 0;
+				while ((count = bis.read(buffer, 0, 1024)) != -1)
+				{
+					fis.write(buffer, 0, count);
+				}
 			}
 		}
 	}
