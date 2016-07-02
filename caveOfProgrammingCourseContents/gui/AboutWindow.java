@@ -13,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import caveOfProgrammingCourseContents.gui.resources.Version;
+
 public class AboutWindow extends JPanel
 {
 	private static final long serialVersionUID = 1L;
@@ -30,7 +32,7 @@ public class AboutWindow extends JPanel
 		author.setAlignmentX(Component.CENTER_ALIGNMENT);
 		year = new JLabel(rb.getString("year") + " 2016");
 		year.setAlignmentX(Component.CENTER_ALIGNMENT);
-		version = new JLabel(rb.getString("version") + ": 1.4");
+		version = new JLabel(rb.getString("version") + ": " + Version.getVer());
 		version.setAlignmentX(Component.CENTER_ALIGNMENT);
 		title = new JLabel("CaveOfProgramming Contents Downloader");
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -39,7 +41,7 @@ public class AboutWindow extends JPanel
 		explanation.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Font font = title.getFont();
 		title.setFont(new Font(font.getFontName(), Font.BOLD, 15));
-		ImageIcon icon = new ImageIcon(getClass().getResource("icon/icon128.png"));
+		ImageIcon icon = new ImageIcon(getClass().getResource("resources/icon/icon128.png"));
 		image = new JLabel(icon);
 		image.setAlignmentX(Component.CENTER_ALIGNMENT);
 		this.add(title);

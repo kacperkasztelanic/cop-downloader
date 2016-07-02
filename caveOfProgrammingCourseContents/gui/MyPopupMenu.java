@@ -10,12 +10,12 @@ import javax.swing.JPopupMenu;
 public class MyPopupMenu extends JPopupMenu
 {
 	private static final long serialVersionUID = 1L;
-	private ResourceBundle rb = RAO.getInstance();
-	JCheckBoxMenuItem showLogMI;
+	private ResourceBundle rb;
+	JCheckBoxMenuItem showLogMI = new JCheckBoxMenuItem();
 
 	public MyPopupMenu(MainWindow mw)
 	{
-		showLogMI = new JCheckBoxMenuItem(rb.getString("showLog"));
+		setDesc();
 		showLogMI.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -24,5 +24,11 @@ public class MyPopupMenu extends JPopupMenu
 			}
 		});
 		this.add(showLogMI);
+	}
+
+	protected void setDesc()
+	{
+		rb = RAO.getInstance();
+		showLogMI.setText(rb.getString("showLog"));
 	}
 }

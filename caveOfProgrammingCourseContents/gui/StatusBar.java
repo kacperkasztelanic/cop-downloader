@@ -9,18 +9,17 @@ import javax.swing.JPanel;
 public class StatusBar extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-	private ResourceBundle rb = RAO.getInstance();
-	private JLabel loggedInLb;
-	private JLabel downloadInProgress;
-	private JLabel separator;
+	private ResourceBundle rb;
+	private JLabel loggedInLb = new JLabel();
+	private JLabel downloadInProgress = new JLabel();
+	private JLabel separator = new JLabel();
 
 	public StatusBar(MainWindow mw)
 	{
 		super();
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		loggedInLb = new JLabel(rb.getString("loggedIn"));
-		downloadInProgress = new JLabel(rb.getString("downloadInProgress"));
-		separator = new JLabel(" | ");
+		setDesc();
+		separator.setText(" | ");
 		this.add(loggedInLb);
 		loggedInLb.setVisible(false);
 		downloadInProgress.setVisible(false);
@@ -51,5 +50,13 @@ public class StatusBar extends JPanel
 	{
 		downloadInProgress.setVisible(true);
 		separator.setVisible(loggedInLb.isVisible());
+	}
+
+	protected void setDesc()
+	{
+		rb = RAO.getInstance();
+		loggedInLb.setText(rb.getString("loggedIn"));
+		downloadInProgress.setText(rb.getString("downloadInProgress"));
+
 	}
 }

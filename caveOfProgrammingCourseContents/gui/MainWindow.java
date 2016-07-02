@@ -36,36 +36,39 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 import javax.swing.border.EmptyBorder;
 
+import caveOfProgrammingCourseContents.gui.resources.Version;
 import caveOfProgrammingCourseContents.mechanics.DownloadContents;
 import caveOfProgrammingCourseContents.mechanics.TableOfContents;
 
 public class MainWindow extends JFrame
 {
 	private static final long serialVersionUID = 1L;
-	private ResourceBundle rb = RAO.getInstance();
+	private final String TIME_PATTERN = "HH':'mm':'ss";
+	private final String DEFAULT_FOLDER = "user.home";
+	private ResourceBundle rb;
 	protected MainMenuBar mainMenu;
 	protected StatusBar statusBar;
-	private JButton downloadBt;
-	private JButton stopBt;
-	private JButton browseBt;
-	private JButton tableOfContentsBt;
-	private JCheckBox attachmentsCheck;
-	private JCheckBox attachmentsOnlyCheck;
-	private JProgressBar progressBar;
-	private JTextArea progressAreaRaw;
+	private JButton downloadBt = new JButton();
+	private JButton stopBt = new JButton();
+	private JButton browseBt = new JButton();
+	private JButton tableOfContentsBt = new JButton();
+	private JCheckBox attachmentsCheck = new JCheckBox();
+	private JCheckBox attachmentsOnlyCheck = new JCheckBox();
+	private JProgressBar progressBar = new JProgressBar();
+	private JTextArea progressAreaRaw = new JTextArea();
 	private JScrollPane progressArea;
-	private JTextField urlTF;
-	private JTextField fromTF;
-	private JTextField upToTF;
-	private JTextField pathTF;
-	private JTextField fileNamePatternTF;
+	private JTextField urlTF = new JTextField();
+	private JTextField fromTF = new JTextField();
+	private JTextField upToTF = new JTextField();
+	private JTextField pathTF = new JTextField();
+	private JTextField fileNamePatternTF = new JTextField();
 	private JFileChooser folderDialog;
-	private JLabel urlLb;
-	private JLabel downloadLb;
-	private JLabel upToLb;
-	private JLabel progressLb;
-	private JLabel pathLb;
-	private JLabel fileNamePatternLb;
+	private JLabel urlLb = new JLabel();
+	private JLabel downloadLb = new JLabel();
+	private JLabel upToLb = new JLabel();
+	private JLabel progressLb = new JLabel();
+	private JLabel pathLb = new JLabel();
+	private JLabel fileNamePatternLb = new JLabel();
 	private JPanel pathPl;
 	private JPanel urlPl;
 	private JPanel downloadPl;
@@ -79,42 +82,26 @@ public class MainWindow extends JFrame
 	private volatile boolean stop = false;
 	private boolean inProgress = false;
 	private int advance;
-	private SimpleDateFormat sdf;
+	private SimpleDateFormat sdf = new SimpleDateFormat(TIME_PATTERN);
 	private MyPopupMenu popup;
 	private MyPopupMenuText popupText;
 	private Component space;
 
 	public MainWindow()
 	{
-		super("CaveOfProgramming Contents Downloader v1.4");
+		super("CaveOfProgramming Contents Downloader v" + Version.getVer());
 		this.setLayout(new BorderLayout());
 		this.setLocationByPlatform(true);
 		this.setResizable(false);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		setIcons();
-
 		mainMenu = new MainMenuBar(this);
 		this.setJMenuBar(mainMenu);
 
 		// Buttons init
-		downloadBt = new JButton(rb.getString("downloadBt"));
-		downloadBt.setToolTipText("<html>" + rb.getString("downloadTip") + "</html>");
 		downloadBt.setEnabled(false);
-		stopBt = new JButton(rb.getString("stopBt"));
 		stopBt.setEnabled(false);
-		stopBt.setToolTipText("<html>" + rb.getString("stopTip") + "</html>");
-		browseBt = new JButton(rb.getString("browseBt"));
-		browseBt.setToolTipText(rb.getString("browseTip"));
-		tableOfContentsBt = new JButton(rb.getString("tableOfContentsBt"));
-		tableOfContentsBt.setToolTipText("<html>" + rb.getString("tableOfContentsTip") + "</html>");
-		// ProgressBar init
-		progressBar = new JProgressBar();
 		// CheckBoxes init
-		attachmentsCheck = new JCheckBox(rb.getString("attachmentsCheck"));
-		attachmentsCheck.setToolTipText("<html>" + rb.getString("attachmentsCheckTip") + "</html>");
-		attachmentsOnlyCheck = new JCheckBox(rb.getString("attachmentsOnlyCheck"));
-		attachmentsOnlyCheck.setToolTipText("<html>" + rb.getString("attachmentsOnlyCheckTip") + "</html>");
 		attachmentsOnlyCheck.setEnabled(false);
 		// TextArea and ScrollPane init
 		progressAreaRaw = new JTextArea();
@@ -123,33 +110,17 @@ public class MainWindow extends JFrame
 		progressAreaRaw.setFont(progressArea.getFont().deriveFont(12f));
 		progressArea.setVisible(false);
 		// TextFields init
-		urlTF = new JTextField(65);
-		urlTF.setToolTipText("<html>" + rb.getString("urlTip") + "</html>");
-		fromTF = new JTextField(3);
-		fromTF.setToolTipText(rb.getString("fromTip"));
-		upToTF = new JTextField(3);
-		upToTF.setToolTipText(rb.getString("upToTip"));
-		fileNamePatternTF = new JTextField(15);
-		fileNamePatternTF.setToolTipText("<html>" + rb.getString("fileNamePatternTip") + "</html>");
-		pathTF = new JTextField(28);
-		pathTF.setToolTipText("<html>" + rb.getString("pathTip") + "</html>");
+		urlTF.setColumns(65);
+		fromTF.setColumns(3);
+		upToTF.setColumns(3);
+		fileNamePatternTF.setColumns(15);
+		pathTF.setColumns(28);
 		// FolderDialog init
-		folderDialog = new JFileChooser(System.getProperty("user.home"));
+		folderDialog = new JFileChooser(System.getProperty(DEFAULT_FOLDER));
 		folderDialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		// Labels init
-		pathLb = new JLabel(rb.getString("path"));
-		pathLb.setToolTipText("<html>" + rb.getString("pathTip") + "</html>");
-		urlLb = new JLabel(rb.getString("url"));
-		urlLb.setToolTipText("<html>" + rb.getString("urlTip") + "</html>");
-		downloadLb = new JLabel(rb.getString("from"));
-		downloadLb.setToolTipText(rb.getString("fromTip"));
-		upToLb = new JLabel(rb.getString("to"));
-		upToLb.setToolTipText(rb.getString("upToTip"));
-		progressLb = new JLabel(rb.getString("idle"));
-		fileNamePatternLb = new JLabel(rb.getString("fileNamePattern"));
-		fileNamePatternLb.setToolTipText("<html>" + rb.getString("fileNamePatternTip") + "</html>");
 
-		sdf = new SimpleDateFormat("HH':'mm':'ss");
+		setIcons();
+		setDesc();
 
 		// Buttons action listeners
 		browseBt.addActionListener(new ActionListener()
@@ -534,15 +505,57 @@ public class MainWindow extends JFrame
 		icons = new ArrayList<>();
 		for (IconSizes ico : IconSizes.values())
 		{
-			URL iconURL = getClass().getResource("icon/" + ico + ".png");
+			URL iconURL = getClass().getResource("resources/icon/" + ico + ".png");
 			ImageIcon icon = new ImageIcon(iconURL);
 			icons.add(icon.getImage());
 		}
 		this.setIconImages(icons);
 	}
 
+	protected void setDesc()
+	{
+		rb = RAO.getInstance();
+		// Buttons init
+		downloadBt.setText(rb.getString("downloadBt"));
+		downloadBt.setToolTipText("<html>" + rb.getString("downloadTip") + "</html>");
+		stopBt.setText(rb.getString("stopBt"));
+		stopBt.setToolTipText("<html>" + rb.getString("stopTip") + "</html>");
+		browseBt.setText(rb.getString("browseBt"));
+		browseBt.setToolTipText(rb.getString("browseTip"));
+		tableOfContentsBt.setText(rb.getString("tableOfContentsBt"));
+		tableOfContentsBt.setToolTipText("<html>" + rb.getString("tableOfContentsTip") + "</html>");
+		// CheckBoxes init
+		attachmentsCheck.setText(rb.getString("attachmentsCheck"));
+		attachmentsCheck.setToolTipText("<html>" + rb.getString("attachmentsCheckTip") + "</html>");
+		attachmentsOnlyCheck.setText(rb.getString("attachmentsOnlyCheck"));
+		attachmentsOnlyCheck.setToolTipText("<html>" + rb.getString("attachmentsOnlyCheckTip") + "</html>");
+		// TextFields init
+		urlTF.setToolTipText("<html>" + rb.getString("urlTip") + "</html>");
+		fromTF.setToolTipText(rb.getString("fromTip"));
+		upToTF.setToolTipText(rb.getString("upToTip"));
+		fileNamePatternTF.setToolTipText("<html>" + rb.getString("fileNamePatternTip") + "</html>");
+		pathTF.setToolTipText("<html>" + rb.getString("pathTip") + "</html>");
+		// Labels init
+		pathLb.setText(rb.getString("path"));
+		pathLb.setToolTipText("<html>" + rb.getString("pathTip") + "</html>");
+		urlLb.setText(rb.getString("url"));
+		urlLb.setToolTipText("<html>" + rb.getString("urlTip") + "</html>");
+		downloadLb.setText(rb.getString("from"));
+		downloadLb.setToolTipText(rb.getString("fromTip"));
+		upToLb.setText(rb.getString("to"));
+		upToLb.setToolTipText(rb.getString("upToTip"));
+		progressLb.setText(rb.getString("idle"));
+		fileNamePatternLb.setText(rb.getString("fileNamePattern"));
+		fileNamePatternLb.setToolTipText("<html>" + rb.getString("fileNamePatternTip") + "</html>");
+		pack();
+	}
+
 	protected void updateDesc()
 	{
-
+		this.setDesc();
+		mainMenu.setDesc();
+		popup.setDesc();
+		popupText.setDesc();
+		statusBar.setDesc();
 	}
 }

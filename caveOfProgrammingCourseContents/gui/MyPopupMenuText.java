@@ -13,37 +13,49 @@ import javax.swing.text.TextAction;
 public class MyPopupMenuText extends JPopupMenu
 {
 	private static final long serialVersionUID = 1L;
-	private ResourceBundle rb = RAO.getInstance();
+	private ResourceBundle rb;
+	private Action cut = new DefaultEditorKit.CutAction();
+	private Action copy = new DefaultEditorKit.CopyAction();
+	private Action paste = new DefaultEditorKit.PasteAction();
 
 	public MyPopupMenuText(MainWindow mw)
 	{
-		Action cut = new DefaultEditorKit.CutAction();
-		cut.putValue(Action.NAME, rb.getString("cut"));
+		setDesc();
+
 		cut.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control X"));
 		add(cut);
 
-		Action copy = new DefaultEditorKit.CopyAction();
-		copy.putValue(Action.NAME, rb.getString("copy"));
 		copy.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control C"));
 		add(copy);
 
-		Action paste = new DefaultEditorKit.PasteAction();
-		paste.putValue(Action.NAME, rb.getString("paste"));
 		paste.putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control V"));
 		add(paste);
 
-		Action selectAll = new SelectAll();
-		add(selectAll);
+		add(new SelectAll());
 	}
 
-	static class SelectAll extends TextAction
+	protected void setDesc()
+	{
+		rb = RAO.getInstance();
+		cut.putValue(Action.NAME, rb.getString("cut"));
+		copy.putValue(Action.NAME, rb.getString("copy"));
+		paste.putValue(Action.NAME, rb.getString("paste"));
+		System.out.println(this.getComponentCount());
+		if (this.getComponentCount() > 3)
+		{
+			remove(3);
+			add(new SelectAll());
+		}
+	}
+
+	private class SelectAll extends TextAction
 	{
 		private static final long serialVersionUID = 1L;
-		private static ResourceBundle rb = ResourceBundle.getBundle("text");
 
 		public SelectAll()
 		{
-			super(rb.getString("selectAll"));
+			super(RAO.getInstance().getString("selectAll"));
+			putValue(Action.NAME, rb.getString("selectAll"));
 			putValue(Action.ACCELERATOR_KEY, KeyStroke.getKeyStroke("control A"));
 		}
 

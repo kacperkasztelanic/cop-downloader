@@ -44,7 +44,8 @@ public class LoginWindow extends JDialog
 
 	public LoginWindow(Frame parent)
 	{
-		super(parent, "Login", true);
+		super(parent, true);
+		super.setTitle(rb.getString("loginMI"));
 		this.mw = (MainWindow) parent;
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		this.setResizable(false);

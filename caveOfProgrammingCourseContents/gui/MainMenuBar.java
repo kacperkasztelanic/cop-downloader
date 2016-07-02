@@ -21,52 +21,60 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class MainMenuBar extends JMenuBar
 {
 	private static final long serialVersionUID = 1L;
-	private ResourceBundle rb = RAO.getInstance();
-	private JMenu fileM;
-	private JMenu settsM;
-	private JMenu infoM;
-	private JMenu lafM;
-	private JMenu langM;
-	private JCheckBoxMenuItem windowsMI;;
-	private JCheckBoxMenuItem metalMI;;
-	private JCheckBoxMenuItem nimbusMI;
-	private JCheckBoxMenuItem defaultMI;
-	private ButtonGroup langBG;
-	private JRadioButtonMenuItem englishMI;
-	private JRadioButtonMenuItem polishMI;
-	private JMenuItem aboutMI;
-	private JMenuItem loginMI;
-	private JMenuItem logoutMI;
-	private JMenuItem quitMI;
-	private JMenuItem saveLogMI;
+	private ResourceBundle rb;
+	private JMenu fileM = new JMenu();
+	private JMenu settsM = new JMenu();
+	private JMenu infoM = new JMenu();
+	private JMenu lafM = new JMenu();
+	private JMenu langM = new JMenu();
+	private JCheckBoxMenuItem windowsMI = new JCheckBoxMenuItem();
+	private JCheckBoxMenuItem metalMI = new JCheckBoxMenuItem();
+	private JCheckBoxMenuItem nimbusMI = new JCheckBoxMenuItem();
+	private JCheckBoxMenuItem defaultMI = new JCheckBoxMenuItem();
+	private ButtonGroup langBG = new ButtonGroup();
+	private JRadioButtonMenuItem englishMI = new JRadioButtonMenuItem();
+	private JRadioButtonMenuItem polishMI = new JRadioButtonMenuItem();
+	private JMenuItem aboutMI = new JMenuItem();
+	private JMenuItem loginMI = new JMenuItem();
+	private JMenuItem logoutMI = new JMenuItem();
+	private JMenuItem quitMI = new JMenuItem();
+	private JMenuItem saveLogMI = new JMenuItem();
 	private MainWindow mw;
 	protected LoginWindow lg;
 	protected AboutWindow aw;
+
+	protected void setDesc()
+	{
+		rb = RAO.getInstance();
+		fileM.setText(rb.getString("fileM"));
+		settsM.setText(rb.getString("settingsM"));
+		langM.setText(rb.getString("languageM"));
+		lafM.setText(rb.getString("lAndFM"));
+		infoM.setText(rb.getString("infoM"));
+		defaultMI.setText(rb.getString("defaultMI"));
+		windowsMI.setText("Windows");
+		nimbusMI.setText("Nimbus");
+		metalMI.setText("Metal");
+		englishMI.setText(rb.getString("englishMI"));
+		polishMI.setText(rb.getString("polishMI"));
+		aboutMI.setText(rb.getString("aboutMI"));
+		loginMI.setText(rb.getString("loginMI"));
+		logoutMI.setText(rb.getString("logoutMI"));
+		saveLogMI.setText(rb.getString("saveLogMI"));
+		quitMI.setText(rb.getString("quitMI"));
+	}
 
 	public MainMenuBar(MainWindow mw)
 	{
 		super();
 		this.mw = mw;
-		fileM = new JMenu(rb.getString("fileM"));
-		settsM = new JMenu(rb.getString("settingsM"));
-		langM = new JMenu(rb.getString("languageM"));
-		lafM = new JMenu(rb.getString("lAndFM"));
-		infoM = new JMenu(rb.getString("infoM"));
-		defaultMI = new JCheckBoxMenuItem(rb.getString("defaultMI"));
+
+		setDesc();
+
 		defaultMI.setSelected(true);
-		windowsMI = new JCheckBoxMenuItem("Windows");
-		nimbusMI = new JCheckBoxMenuItem("Nimbus");
-		metalMI = new JCheckBoxMenuItem("Metal");
-		englishMI = new JRadioButtonMenuItem(rb.getString("englishMI"));
-		polishMI = new JRadioButtonMenuItem(rb.getString("polishMI"));
 		englishMI.setSelected(Locale.getDefault().getLanguage().equals(Locale.forLanguageTag("en").getLanguage()));
 		polishMI.setSelected(Locale.getDefault().getLanguage().equals(Locale.forLanguageTag("pl").getLanguage()));
-		aboutMI = new JMenuItem(rb.getString("aboutMI"));
-		loginMI = new JMenuItem(rb.getString("loginMI"));
-		logoutMI = new JMenuItem(rb.getString("logoutMI"));
-		saveLogMI = new JMenuItem(rb.getString("saveLogMI"));
-		quitMI = new JMenuItem(rb.getString("quitMI"));
-		langBG = new ButtonGroup();
+
 		infoM.add(aboutMI);
 		lafM.add(defaultMI);
 		lafM.addSeparator();
@@ -124,8 +132,8 @@ public class MainMenuBar extends JMenuBar
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				JOptionPane.showMessageDialog(null, aw = new AboutWindow((JFrame) getRootPane().getParent()), "About",
-						JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(null, aw = new AboutWindow((JFrame) getRootPane().getParent()),
+						rb.getString("aboutMI"), JOptionPane.PLAIN_MESSAGE);
 			}
 		});
 
