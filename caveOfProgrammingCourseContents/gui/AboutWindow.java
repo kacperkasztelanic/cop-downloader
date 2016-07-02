@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.util.ResourceBundle;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -15,7 +16,7 @@ import javax.swing.SwingConstants;
 public class AboutWindow extends JPanel
 {
 	private static final long serialVersionUID = 1L;
-
+	private ResourceBundle rb = RAO.getInstance();
 	private JLabel author;
 	private JLabel year;
 	private JLabel title;
@@ -25,16 +26,15 @@ public class AboutWindow extends JPanel
 
 	public AboutWindow(Frame parent)
 	{
-		author = new JLabel("Written by: Kacper Kasztelanic");
+		author = new JLabel(rb.getString("author") + ": Kacper Kasztelanic");
 		author.setAlignmentX(Component.CENTER_ALIGNMENT);
-		year = new JLabel("Created in 2016");
+		year = new JLabel(rb.getString("year") + " 2016");
 		year.setAlignmentX(Component.CENTER_ALIGNMENT);
-		version = new JLabel("Version: 1.4");
+		version = new JLabel(rb.getString("version") + ": 1.4");
 		version.setAlignmentX(Component.CENTER_ALIGNMENT);
 		title = new JLabel("CaveOfProgramming Contents Downloader");
 		title.setAlignmentX(Component.CENTER_ALIGNMENT);
-		explanation = new JLabel(
-				"<html><p align=center>Utility that helps to download course contents<br> from caveofprogramming.com</p></html>",
+		explanation = new JLabel("<html><p align=center>" + rb.getString("explanation") + "</p></html>",
 				SwingConstants.CENTER);
 		explanation.setAlignmentX(Component.CENTER_ALIGNMENT);
 		Font font = title.getFont();

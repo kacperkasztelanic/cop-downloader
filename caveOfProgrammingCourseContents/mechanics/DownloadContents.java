@@ -183,24 +183,24 @@ public class DownloadContents
 		return urlToWebsiteFull.substring(0, urlToWebsiteFull.indexOf("lectures") - 1);
 	}
 
+	public boolean isAttachmentsDownload()
+	{
+		return attachmentsDownload;
+	}
+
 	public void setAttachmentsDownload(boolean bool)
 	{
 		this.attachmentsDownload = bool;
 	}
 
-	public boolean getAttachemntsDownload()
+	public boolean isAttachmentsOnlyDownload()
 	{
-		return this.attachmentsDownload;
+		return attachmentsOnlyDownload;
 	}
 
 	public void setAttachmentsOnlyDownload(boolean bool)
 	{
 		this.attachmentsOnlyDownload = bool;
-	}
-
-	public boolean getAttachemntsOnlyDownload()
-	{
-		return this.attachmentsOnlyDownload;
 	}
 
 	public void setFileNumber(int number)

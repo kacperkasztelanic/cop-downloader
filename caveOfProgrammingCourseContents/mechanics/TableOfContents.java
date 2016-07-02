@@ -17,13 +17,18 @@ public class TableOfContents
 
 	public static void createTableOfContents(String url, String path, String prefix) throws IOException
 	{
-		saveContetnsReport(parseTableOfContents(url, prefix), path + "\\tableOfContents.txt", prefix);
+		saveContentsReport(parseTableOfContents(getDocumentFromUrl(url), prefix), path + "\\tableOfContents.txt",
+				prefix);
 	}
 
-	private static String parseTableOfContents(String url, String prefix) throws IOException
+	private static Document getDocumentFromUrl(String url) throws IOException
 	{
-		Document document = Jsoup.connect(url).get();
-		Elements titles = document.select(".lecture-name");
+		return Jsoup.connect(url).get();
+	}
+
+	private static String parseTableOfContents(Document doc, String prefix)
+	{
+		Elements titles = doc.select(".lecture-name");
 		int i = 0;
 		StringBuilder contents = new StringBuilder();
 		for (Element l : titles)
@@ -35,7 +40,7 @@ public class TableOfContents
 		return contents.toString();
 	}
 
-	private static void saveContetnsReport(String contents, String fileName, String prefix) throws IOException
+	private static void saveContentsReport(String contents, String fileName, String prefix) throws IOException
 	{
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileName)))
 		{
@@ -45,10 +50,5 @@ public class TableOfContents
 			bw.newLine();
 			bw.write(contents);
 		}
-	}
-
-	public static void main(String[] args)
-	{
-		System.out.println(System.getProperty("java.runtime.version"));
 	}
 }

@@ -3,13 +3,17 @@ package caveOfProgrammingCourseContents.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -17,13 +21,19 @@ import javax.swing.UnsupportedLookAndFeelException;
 public class MainMenuBar extends JMenuBar
 {
 	private static final long serialVersionUID = 1L;
+	private ResourceBundle rb = RAO.getInstance();
 	private JMenu fileM;
-	private JMenu lafM;
+	private JMenu settsM;
 	private JMenu infoM;
+	private JMenu lafM;
+	private JMenu langM;
 	private JCheckBoxMenuItem windowsMI;;
 	private JCheckBoxMenuItem metalMI;;
 	private JCheckBoxMenuItem nimbusMI;
 	private JCheckBoxMenuItem defaultMI;
+	private ButtonGroup langBG;
+	private JRadioButtonMenuItem englishMI;
+	private JRadioButtonMenuItem polishMI;
 	private JMenuItem aboutMI;
 	private JMenuItem loginMI;
 	private JMenuItem logoutMI;
@@ -37,32 +47,45 @@ public class MainMenuBar extends JMenuBar
 	{
 		super();
 		this.mw = mw;
-		fileM = new JMenu("File");
-		lafM = new JMenu("L&F");
-		infoM = new JMenu(" ? ");
-		defaultMI = new JCheckBoxMenuItem("Default");
+		fileM = new JMenu(rb.getString("fileM"));
+		settsM = new JMenu(rb.getString("settingsM"));
+		langM = new JMenu(rb.getString("languageM"));
+		lafM = new JMenu(rb.getString("lAndFM"));
+		infoM = new JMenu(rb.getString("infoM"));
+		defaultMI = new JCheckBoxMenuItem(rb.getString("defaultMI"));
 		defaultMI.setSelected(true);
 		windowsMI = new JCheckBoxMenuItem("Windows");
 		nimbusMI = new JCheckBoxMenuItem("Nimbus");
 		metalMI = new JCheckBoxMenuItem("Metal");
-		aboutMI = new JMenuItem("About");
-		loginMI = new JMenuItem("Login");
-		logoutMI = new JMenuItem("Logout");
-		saveLogMI = new JMenuItem("Save log");
-		quitMI = new JMenuItem("Quit");
+		englishMI = new JRadioButtonMenuItem(rb.getString("englishMI"));
+		polishMI = new JRadioButtonMenuItem(rb.getString("polishMI"));
+		englishMI.setSelected(Locale.getDefault().getLanguage().equals(Locale.forLanguageTag("en").getLanguage()));
+		polishMI.setSelected(Locale.getDefault().getLanguage().equals(Locale.forLanguageTag("pl").getLanguage()));
+		aboutMI = new JMenuItem(rb.getString("aboutMI"));
+		loginMI = new JMenuItem(rb.getString("loginMI"));
+		logoutMI = new JMenuItem(rb.getString("logoutMI"));
+		saveLogMI = new JMenuItem(rb.getString("saveLogMI"));
+		quitMI = new JMenuItem(rb.getString("quitMI"));
+		langBG = new ButtonGroup();
 		infoM.add(aboutMI);
 		lafM.add(defaultMI);
 		lafM.addSeparator();
 		lafM.add(windowsMI);
 		lafM.add(metalMI);
 		lafM.add(nimbusMI);
+		langBG.add(englishMI);
+		langBG.add(polishMI);
+		langM.add(englishMI);
+		langM.add(polishMI);
+		settsM.add(lafM);
+		settsM.add(langM);
 		fileM.add(loginMI);
 		fileM.add(logoutMI);
 		fileM.addSeparator();
 		fileM.add(saveLogMI);
 		fileM.add(quitMI);
 		this.add(fileM);
-		this.add(lafM);
+		this.add(settsM);
 		this.add(infoM);
 
 		loginMI.addActionListener(new ActionListener()
@@ -186,6 +209,29 @@ public class MainMenuBar extends JMenuBar
 				}
 			}
 		});
+
+		englishMI.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				setCurrentLocale(Locale.forLanguageTag("en"));
+			}
+		});
+
+		polishMI.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				setCurrentLocale(Locale.forLanguageTag("pl"));
+			}
+		});
+	}
+
+	private void setCurrentLocale(Locale locale)
+	{
+		RAO.makeInstanceNull();
+		Locale.setDefault(locale);
+		mw.updateDesc();
 	}
 
 	private void unselectCheckBoxMenuItems()
@@ -209,28 +255,30 @@ public class MainMenuBar extends JMenuBar
 						mw.statusBar.hideLogged();
 						mw.setDownloadBtAccessible(false);
 						mw.appendTextArea("Logged out.");
-						JOptionPane.showMessageDialog(null, "You have been successfully logged out.", "Info",
+						JOptionPane.showMessageDialog(null, rb.getString("loggedOutDialog"), rb.getString("info"),
 								JOptionPane.INFORMATION_MESSAGE);
 					}
 					else
 					{
-						JOptionPane.showMessageDialog(null, "Error contacting server.", "Error",
-								JOptionPane.ERROR_MESSAGE);
+						JOptionPane.showMessageDialog(null, rb.getString("errorContactingServer"),
+								rb.getString("error"), JOptionPane.ERROR_MESSAGE);
 					}
 				}
 				else
-					JOptionPane.showMessageDialog(null, "You are not logged-in.", "Info",
+					JOptionPane.showMessageDialog(null, rb.getString("notLoggedInDialog"), rb.getString("info"),
 							JOptionPane.INFORMATION_MESSAGE);
 
 			}
 			catch (IOException e1)
 			{
-				JOptionPane.showMessageDialog(null, "Error contacting server.", "Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, rb.getString("errorContactingServer"), rb.getString("error"),
+						JOptionPane.ERROR_MESSAGE);
 			}
 		}
 		else
 		{
-			JOptionPane.showMessageDialog(null, "You are not logged-in.", "Info", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(null, rb.getString("notLoggedInDialog"), rb.getString("info"),
+					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 }

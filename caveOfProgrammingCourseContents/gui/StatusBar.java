@@ -1,6 +1,7 @@
 package caveOfProgrammingCourseContents.gui;
 
 import java.awt.FlowLayout;
+import java.util.ResourceBundle;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -8,6 +9,7 @@ import javax.swing.JPanel;
 public class StatusBar extends JPanel
 {
 	private static final long serialVersionUID = 1L;
+	private ResourceBundle rb = RAO.getInstance();
 	private JLabel loggedInLb;
 	private JLabel downloadInProgress;
 	private JLabel separator;
@@ -16,8 +18,8 @@ public class StatusBar extends JPanel
 	{
 		super();
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
-		loggedInLb = new JLabel("Signed in");
-		downloadInProgress = new JLabel("Download in progress");
+		loggedInLb = new JLabel(rb.getString("loggedIn"));
+		downloadInProgress = new JLabel(rb.getString("downloadInProgress"));
 		separator = new JLabel(" | ");
 		this.add(loggedInLb);
 		loggedInLb.setVisible(false);

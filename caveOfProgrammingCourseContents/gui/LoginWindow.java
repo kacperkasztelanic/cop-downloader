@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
 
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ import caveOfProgrammingCourseContents.mechanics.DownloadContents;
 public class LoginWindow extends JDialog
 {
 	private static final long serialVersionUID = 1L;
+	private ResourceBundle rb = RAO.getInstance();
 	private JTextField usernameTF;
 	private JPasswordField passwordPF;
 	private JButton loginBt;
@@ -56,7 +58,7 @@ public class LoginWindow extends JDialog
 
 		cs.insets = new Insets(3, 3, 3, 3);
 
-		usernameLb = new JLabel("Username: ");
+		usernameLb = new JLabel(rb.getString("username") + ": ");
 		cs.gridx = 0;
 		cs.gridy = 0;
 		cs.gridwidth = 1;
@@ -68,7 +70,7 @@ public class LoginWindow extends JDialog
 		cs.gridwidth = 2;
 		panel.add(usernameTF, cs);
 
-		passwordLb = new JLabel("Password: ");
+		passwordLb = new JLabel(rb.getString("password") + ": ");
 		cs.gridx = 0;
 		cs.gridy = 1;
 		cs.gridwidth = 1;
@@ -80,16 +82,16 @@ public class LoginWindow extends JDialog
 		cs.gridwidth = 2;
 		panel.add(passwordPF, cs);
 
-		loginBt = new JButton("Login");
+		loginBt = new JButton(rb.getString("loginBt"));
 		loginBt.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
 				SwingWorker<Boolean, Void> worker = new SwingWorker<Boolean, Void>()
 				{
-					boolean error = false;
-					String username = getUsername();
-					String password = getPassword();
+					private boolean error = false;
+					private String username = getUsername();
+					private String password = getPassword();
 
 					protected Boolean doInBackground() throws Exception
 					{
@@ -114,9 +116,9 @@ public class LoginWindow extends JDialog
 							{
 								mw.statusBar.showLogged();
 								mw.setDownloadBtAccessible(true);
-								mw.appendTextArea("Successfully logged in as: " + username + ".");
-								JOptionPane.showMessageDialog(null, "Logged in correctly.", "Info",
-										JOptionPane.INFORMATION_MESSAGE);
+								mw.appendTextArea(rb.getString("successLoginTA") + ": " + username + ".");
+								JOptionPane.showMessageDialog(null, rb.getString("successLoginDialog"),
+										rb.getString("info"), JOptionPane.INFORMATION_MESSAGE);
 								dispose();
 							}
 							else if (error == false)
@@ -124,25 +126,25 @@ public class LoginWindow extends JDialog
 								mw.statusBar.hideLogged();
 								mw.setDownloadBtAccessible(false);
 								passwordPF.setText("");
-								JOptionPane.showMessageDialog(null, "Invalid username or password.",
-										"Invalid log-in credentials.", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, rb.getString("invalidCredentialsDialog"),
+										rb.getString("invalidCredentialsDialogTitle"), JOptionPane.ERROR_MESSAGE);
 							}
 						}
 						catch (HeadlessException | InterruptedException | ExecutionException e)
 						{
-							JOptionPane.showMessageDialog(null, "Error contacting server.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, rb.getString("errorContactingServer"),
+									rb.getString("error"), JOptionPane.ERROR_MESSAGE);
 						}
 						if (error)
-							JOptionPane.showMessageDialog(null, "Error contacting server.", "Error",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, rb.getString("errorContactingServer"),
+									rb.getString("error"), JOptionPane.ERROR_MESSAGE);
 					}
 
 				};
 				worker.execute();
 			}
 		});
-		cancelBt = new JButton("Cancel");
+		cancelBt = new JButton(rb.getString("cancelBt"));
 		cancelBt.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent arg0)
@@ -151,7 +153,7 @@ public class LoginWindow extends JDialog
 			}
 		});
 
-		showPasswordCheck = new JCheckBox("Show password");
+		showPasswordCheck = new JCheckBox(rb.getString("showPwCheck"));
 		showPasswordCheck.addItemListener(new ItemListener()
 		{
 			public void itemStateChanged(ItemEvent e)
@@ -180,12 +182,12 @@ public class LoginWindow extends JDialog
 		this.setVisible(true);
 	}
 
-	public String getUsername()
+	private String getUsername()
 	{
 		return usernameTF.getText().trim();
 	}
 
-	public String getPassword()
+	private String getPassword()
 	{
 		return new String(passwordPF.getPassword());
 	}
