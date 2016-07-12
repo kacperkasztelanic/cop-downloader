@@ -40,7 +40,6 @@ public class MyPopupMenuText extends JPopupMenu
 		cut.putValue(Action.NAME, rb.getString("cut"));
 		copy.putValue(Action.NAME, rb.getString("copy"));
 		paste.putValue(Action.NAME, rb.getString("paste"));
-		System.out.println(this.getComponentCount());
 		if (this.getComponentCount() > 3)
 		{
 			remove(3);

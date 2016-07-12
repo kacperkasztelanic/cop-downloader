@@ -2,7 +2,7 @@ package caveOfProgrammingCourseContents.gui.resources;
 
 public class Version
 {
-	private static final String ver = "1.5";
+	private static final String ver = "1.6";
 
 	public static String getVer()
 	{

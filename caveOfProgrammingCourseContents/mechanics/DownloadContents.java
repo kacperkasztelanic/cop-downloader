@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -89,30 +90,45 @@ public class DownloadContents
 		String ext = null;
 		URL urlv = null;
 		URL urla = null;
+		URLConnection connv = null;
+		URLConnection conna = null;
 		if (size > 0)
 		{
 			if (!attachmentsOnlyDownload)
 			{
 				fullUrl = this.urls.get(0);
-				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
+				File vid = null;
 				urlv = new URL(this.urls.get(0));
-				File vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
-				saveFromUrlToFile(urlv, vid);
+				connv = urlv.openConnection();
+				if (fullUrl.length() - fullUrl.lastIndexOf(".") < 6)
+				{
+					ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
+					vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
+				}
+				else
+				{
+					ext = VideoMimeTypeExtension.getExtension(connv.getContentType());
+					if (ext == null)
+						ext = "";
+					vid = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
+				}
+				saveFromUrlToFile(urlv, vid, connv);
 			}
 			if (size > 1 && this.attachmentsDownload)
 			{
 				fullUrl = this.urls.get(1);
 				ext = fullUrl.substring(fullUrl.lastIndexOf(".") + 1);
 				urla = new URL(this.urls.get(1));
+				conna = urla.openConnection();
 				File att = new File(String.format("%s\\%s%d.%s", this.folderPath, this.prefix, this.fileNumber, ext));
-				saveFromUrlToFile(urla, att);
+				saveFromUrlToFile(urla, att, conna);
 			}
 		}
 	}
 
-	private void saveFromUrlToFile(URL url, File file) throws IOException
+	private void saveFromUrlToFile(URL url, File file, URLConnection conn) throws IOException
 	{
-		try (BufferedInputStream bis = new BufferedInputStream(url.openConnection().getInputStream()))
+		try (BufferedInputStream bis = new BufferedInputStream(conn.getInputStream()))
 		{
 			try (FileOutputStream fis = new FileOutputStream(file))
 			{

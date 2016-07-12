@@ -375,6 +375,7 @@ public class MainWindow extends JFrame
 					}
 					catch (Exception e1)
 					{
+						e1.printStackTrace();
 						problem = true;
 					}
 					return null;
